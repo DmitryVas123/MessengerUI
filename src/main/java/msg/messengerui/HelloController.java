@@ -19,19 +19,26 @@ public class HelloController {
     @FXML
     private Button sendButton;
 
+    @FXML
+    private TextField toField;
+
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
 
-    private final String username = "User"; // можно позже заменить на окно авторизации
+    private String username; // можно позже заменить на окно авторизации
 
     @FXML
     public void initialize() {
-        connectToServer();
+        //connectToServer();
         sendButton.setOnAction(event -> sendMessage());
     }
 
-    private void connectToServer() {
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void connectToServer() {
         try {
             socket = new Socket("localhost", 12345);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -61,16 +68,22 @@ public class HelloController {
 
     private void sendMessage() {
         String message = messageField.getText().trim();
+        String to = toField.getText().trim();
 
-        if (!message.isEmpty()) {
-            addChatMessage("Вы", message, true);
-            messageField.clear();
-
-            // Отправка самому себе (можно расширить на других получателей)
-            out.println(XMLBuilder.buildMessage(username, username, message));
-        } else {
+        if (message.isEmpty()) {
             addNotification("Введите сообщение.");
+            return;
         }
+
+        if (to.isEmpty()) {
+            addNotification("Введите получателя.");
+            return;
+        }
+
+        addChatMessage("Вы → " + to, message, true);
+        messageField.clear();
+
+        out.println(XMLBuilder.buildMessage(username, to, message));
     }
 
     private void handleServerMessage(String msg) {

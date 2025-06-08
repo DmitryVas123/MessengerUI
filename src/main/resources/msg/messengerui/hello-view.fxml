@@ -51,7 +51,7 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <TextField fx:id="receiverField" promptText="Получатель" />
+            <TextField fx:id="toField" promptText="Получатель" />
             <TextField fx:id="messageField" HBox.hgrow="ALWAYS" promptText="Введите сообщение..."/>
             <Button fx:id="sendButton" text="Отправить"/>
         </HBox>
