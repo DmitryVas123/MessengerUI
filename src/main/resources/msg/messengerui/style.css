@@ -1,0 +1,81 @@
+.root {
+    -fx-background-color: #e5ddd5;
+}
+
+/* Верхняя панель */
+.top-bar {
+    -fx-background-color: #075e54;
+    -fx-padding: 15;
+    -fx-alignment: center-left;
+}
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Область чата */
+.chat-area {
+    -fx-background-color: #e5ddd5;
+    -fx-border-color: transparent;
+}
+#chatBox {
+    -fx-background-color: transparent;
+}
+
+/* Уведомления */
+.notif-area {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1;
+}
+#messageBox {
+    -fx-background-color: transparent;
+}
+
+/* Нижняя панель */
+.bottom-bar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* Кнопка */
+.button {
+    -fx-background-color: #25d366;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 5;
+}
+
+/* Поле ввода */
+.text-field {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #cccccc;
+}
+
+/* Сообщение входящее */
+.message-in {
+    -fx-background-color: #ffffff;
+    -fx-padding: 5 10;
+    -fx-background-radius: 10;
+    -fx-max-width: 300;
+    -fx-alignment: top-left;
+}
+
+/* Сообщение исходящее */
+.message-out {
+    -fx-background-color: #dcf8c6;
+    -fx-padding: 5 10;
+    -fx-background-radius: 10;
+    -fx-max-width: 300;
+    -fx-alignment: top-right;
+}
+
+/* Имя отправителя */
+.sender-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #555;
+}

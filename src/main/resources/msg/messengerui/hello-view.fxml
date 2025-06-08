@@ -1,16 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="msg.messengerui.HelloController">
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-  </padding>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="msg.messengerui.HelloController"
+            stylesheets="@style.css">
 
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+    <!-- Верхняя панель -->
+    <top>
+        <HBox fx:id="topBar" spacing="10.0" styleClass="top-bar">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Messenger" styleClass="title"/>
+        </HBox>
+    </top>
+
+    <!-- Центр: Чат и уведомления -->
+    <center>
+        <VBox spacing="5.0">
+            <!-- Чат -->
+            <ScrollPane fx:id="chatScroll" fitToWidth="true" styleClass="chat-area" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="chatBox" spacing="10.0">
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                    </VBox>
+                </content>
+            </ScrollPane>
+
+            <!-- Уведомления -->
+            <ScrollPane fx:id="notifScroll" fitToWidth="true" maxHeight="60" styleClass="notif-area">
+                <content>
+                    <VBox fx:id="messageBox" spacing="5.0">
+                        <padding>
+                            <Insets top="5" right="5" bottom="5" left="5"/>
+                        </padding>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- Нижняя панель -->
+    <bottom>
+        <HBox spacing="10.0" styleClass="bottom-bar">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <TextField fx:id="receiverField" promptText="Получатель" />
+            <TextField fx:id="messageField" HBox.hgrow="ALWAYS" promptText="Введите сообщение..."/>
+            <Button fx:id="sendButton" text="Отправить"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
