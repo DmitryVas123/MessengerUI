@@ -42,5 +42,3 @@ public class HelloApplication extends Application {
         launch();
     }
 }
-
-//TODO: Exception in thread "JavaFX Application Thread" java.lang.NullPointerException: Cannot invoke "msg.messengerui.HelloController.closeConnection()" because "controller" is null

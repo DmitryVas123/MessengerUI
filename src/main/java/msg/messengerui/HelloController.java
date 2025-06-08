@@ -22,6 +22,9 @@ public class HelloController {
     @FXML
     private TextField toField;
 
+    @FXML
+    private ListView<String> userList;
+
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
@@ -30,8 +33,14 @@ public class HelloController {
 
     @FXML
     public void initialize() {
-        //connectToServer();
         sendButton.setOnAction(event -> sendMessage());
+        messageField.setOnAction(event -> sendMessage());
+
+        userList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                toField.setText(newVal);
+            }
+        });
     }
 
     public void setUsername(String username) {
@@ -91,15 +100,28 @@ public class HelloController {
             String from = msg.replaceAll(".*from=\"(.*?)\".*", "$1");
             String text = msg.replaceAll(".*text=\"(.*?)\".*", "$1");
             Platform.runLater(() -> addChatMessage(from, text, false));
+
         } else if (msg.startsWith("<error")) {
             String to = msg.replaceAll(".*to=\"(.*?)\".*", "$1");
             Platform.runLater(() -> addNotification("Ошибка: не найден пользователь " + to));
+
         } else if (msg.startsWith("<status")) {
             String user = msg.replaceAll(".*user=\"(.*?)\".*", "$1");
             String status = msg.replaceAll(".*status=\"(.*?)\".*", "$1");
-            Platform.runLater(() -> addNotification("Пользователь " + user + " теперь " + status));
+
+            Platform.runLater(() -> {
+                addNotification("Пользователь " + user + " теперь " + status);
+                if (status.equals("online")) {
+                    if (!userList.getItems().contains(user)) {
+                        userList.getItems().add(user);
+                    }
+                } else if (status.equals("offline")) {
+                    userList.getItems().remove(user);
+                }
+            });
         }
     }
+
 
     public void closeConnection() {
         try {
@@ -125,4 +147,6 @@ public class HelloController {
         label.setStyle("-fx-text-fill: gray; -fx-font-style: italic; -fx-padding: 3;");
         chatBox.getChildren().add(label);
     }
+
+
 }

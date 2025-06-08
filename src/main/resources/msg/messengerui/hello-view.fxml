@@ -8,6 +8,13 @@
             fx:controller="msg.messengerui.HelloController"
             stylesheets="@style.css">
 
+    <left>
+        <VBox spacing="5" style="-fx-padding: 10;">
+            <Label text="Онлайн" style="-fx-font-weight: bold;"/>
+            <ListView fx:id="userList" prefWidth="150"/>
+        </VBox>
+    </left>
+
     <!-- Верхняя панель -->
     <top>
         <HBox fx:id="topBar" spacing="10.0" styleClass="top-bar">

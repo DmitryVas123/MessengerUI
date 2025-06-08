@@ -23,6 +23,15 @@ public class ClientHandler implements Runnable {
         this.out = new PrintWriter(socket.getOutputStream(), true);
     }
 
+    private void notifyUsers(String statusType, String username) {
+        for (ClientHandler client : clients) {
+            if (client != this && client.username != null) {
+                client.out.println("<status user=\"" + username + "\" status=\"" + statusType + "\" />");
+            }
+        }
+    }
+
+
     public void run() {
         try {
             String input;
@@ -35,6 +44,14 @@ public class ClientHandler implements Runnable {
                             this.username = m.group(1);
                             System.out.println("Пользователь вошёл: " + this.username);
                             this.out.println("<status type=\"auth_success\" />");
+                            // Отправить список текущих пользователей
+                            for (ClientHandler client : clients) {
+                                if (client != this && client.username != null) {
+                                    this.out.println("<status user=\"" + client.username + "\" status=\"online\" />");
+                                }
+                            }
+                            // Оповестить других о новом пользователе
+                            notifyUsers("online", this.username);
                         }
                     } else if (input.startsWith("<message")) {
                         Matcher m = Pattern.compile("to=\"(.*?)\".*?>(.*?)</message>").matcher(input);
@@ -57,6 +74,7 @@ public class ClientHandler implements Runnable {
                         }
                     } else if (input.startsWith("<disconnect")) {
                         System.out.println(this.username + " отключился.");
+                        notifyUsers("offline", this.username);
                         break;
                     }
                 }
