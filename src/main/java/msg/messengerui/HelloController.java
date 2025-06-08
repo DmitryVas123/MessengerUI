@@ -7,6 +7,8 @@ import javafx.scene.layout.VBox;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.*;
+
 import msg.messengerui.common.XMLBuilder;
 
 public class HelloController {
@@ -25,6 +27,11 @@ public class HelloController {
     @FXML
     private ListView<String> userList;
 
+    @FXML
+    private VBox messageBox;
+
+    private Map<String, List<String>> chats = new HashMap<>();
+
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
@@ -35,12 +42,21 @@ public class HelloController {
     public void initialize() {
         sendButton.setOnAction(event -> sendMessage());
         messageField.setOnAction(event -> sendMessage());
+        messageField.setPromptText("Выберите пользователя");
+        userList.setPlaceholder(new Label("никого онлайн"));
 
         userList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 toField.setText(newVal);
+                loadChatForUser(newVal);
+                messageField.setDisable(false);
+                sendButton.setDisable(false);
             }
         });
+
+        messageField.setDisable(true);
+        sendButton.setDisable(true);
+        toField.setEditable(false);
     }
 
     public void setUsername(String username) {
@@ -85,11 +101,12 @@ public class HelloController {
         }
 
         if (to.isEmpty()) {
-            addNotification("Введите получателя.");
+            addNotification("Сначала выберите получателя из списка.");
             return;
         }
 
         addChatMessage("Вы → " + to, message, true);
+        chats.computeIfAbsent(to, k -> new ArrayList<>()).add("Вы: " + message);
         messageField.clear();
 
         out.println(XMLBuilder.buildMessage(username, to, message));
@@ -99,7 +116,12 @@ public class HelloController {
         if (msg.startsWith("<message")) {
             String from = msg.replaceAll(".*from=\"(.*?)\".*", "$1");
             String text = msg.replaceAll(".*text=\"(.*?)\".*", "$1");
-            Platform.runLater(() -> addChatMessage(from, text, false));
+            Platform.runLater(() -> {
+                chats.computeIfAbsent(from, k -> new ArrayList<>()).add(from + ": " + text);
+                if (from.equals(userList.getSelectionModel().getSelectedItem())) {
+                    addChatMessage(from, text, false);
+                }
+            });
 
         } else if (msg.startsWith("<error")) {
             String to = msg.replaceAll(".*to=\"(.*?)\".*", "$1");
@@ -140,12 +162,33 @@ public class HelloController {
         Label label = new Label((isOutgoing ? "Вы: " : sender + ": ") + message);
         label.setStyle("-fx-background-color: " + (isOutgoing ? "#D1F0FF" : "#E8E8E8") + "; -fx-padding: 5; -fx-background-radius: 8;");
         chatBox.getChildren().add(label);
+        scrollToBottom();
     }
 
     public void addNotification(String text) {
         Label label = new Label(text);
         label.setStyle("-fx-text-fill: gray; -fx-font-style: italic; -fx-padding: 3;");
-        chatBox.getChildren().add(label);
+        messageBox.getChildren().add(label);
+        scrollToBottom();
+    }
+
+    private void loadChatForUser(String user) {
+        chatBox.getChildren().clear(); // Очистить старый чат
+
+        List<String> messages = chats.getOrDefault(user, new ArrayList<>());
+        for (String message : messages) {
+            Label label = new Label(message);
+            label.setStyle("-fx-background-color: " + (message.startsWith("Вы: ") ? "#D1F0FF" : "#E8E8E8") + "; -fx-padding: 5; -fx-background-radius: 8;");
+            chatBox.getChildren().add(label);
+        }
+    }
+
+    private void scrollToBottom() {
+        Platform.runLater(() -> {
+            chatBox.layout();
+            chatBox.setTranslateY(0);
+            chatBox.requestLayout();
+        });
     }
 
 

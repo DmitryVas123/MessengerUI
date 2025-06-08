@@ -1,17 +1,33 @@
 .root {
-    -fx-background-color: #e5ddd5;
+    -fx-background-color: #f0f2f5;
 }
 
 /* Верхняя панель */
 .top-bar {
-    -fx-background-color: #075e54;
+    -fx-background-color: #128C7E;
     -fx-padding: 15;
     -fx-alignment: center-left;
 }
 .title {
     -fx-text-fill: white;
-    -fx-font-size: 20px;
+    -fx-font-size: 22px;
     -fx-font-weight: bold;
+}
+
+/* Левая панель пользователей */
+#userList {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dddddd;
+    -fx-border-width: 1;
+    -fx-padding: 5;
+    -fx-cell-size: 40px;
+}
+#userList .list-cell {
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+}
+#userList .list-cell:selected {
+    -fx-background-color: #e0f7fa;
 }
 
 /* Область чата */
@@ -46,14 +62,15 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-padding: 8 16;
-    -fx-background-radius: 5;
+    -fx-background-radius: 10;
 }
 
 /* Поле ввода */
 .text-field {
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
     -fx-border-color: #cccccc;
+    -fx-padding: 8;
 }
 
 /* Сообщение входящее */

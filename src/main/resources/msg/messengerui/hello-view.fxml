@@ -9,8 +9,8 @@
             stylesheets="@style.css">
 
     <left>
-        <VBox spacing="5" style="-fx-padding: 10;">
-            <Label text="Онлайн" style="-fx-font-weight: bold;"/>
+        <VBox spacing="5" style="-fx-background-color: #ffffff; -fx-padding: 10;">
+            <Label text="Онлайн" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
             <ListView fx:id="userList" prefWidth="150"/>
         </VBox>
     </left>
