@@ -18,9 +18,9 @@ public class HelloApplication extends Application {
 
         // Диалог ввода имени
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Авторизация");
-        dialog.setHeaderText("Введите имя пользователя");
-        dialog.setContentText("Имя:");
+        dialog.setTitle("Authorisation");
+        dialog.setHeaderText("Name of user:");
+        dialog.setContentText("user");
 
         String username = dialog.showAndWait().orElse(null);
         if (username == null || username.trim().isEmpty()) {
@@ -31,8 +31,9 @@ public class HelloApplication extends Application {
         controller.connectToServer();
 
         Scene scene = new Scene(root, 1000, 800);
-        stage.setTitle("Hello!");
+        stage.setTitle("Messenger");
         stage.setScene(scene);
+        controller.setScene(scene);
 
         stage.setOnCloseRequest(e -> controller.closeConnection());
         stage.show();

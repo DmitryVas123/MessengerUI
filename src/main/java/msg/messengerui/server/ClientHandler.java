@@ -37,12 +37,12 @@ public class ClientHandler implements Runnable {
             String input;
             try {
                 while((input = this.in.readLine()) != null) {
-                    System.out.println("Принято: " + input);
+                    System.out.println("Received: " + input);
                     if (input.startsWith("<auth")) {
                         Matcher m = Pattern.compile("username=\"(.*?)\"").matcher(input);
                         if (m.find()) {
                             this.username = m.group(1);
-                            System.out.println("Пользователь вошёл: " + this.username);
+                            System.out.println("The user is entered: " + this.username);
                             this.out.println("<status type=\"auth_success\" />");
                             // Отправить список текущих пользователей
                             for (ClientHandler client : clients) {
@@ -73,13 +73,13 @@ public class ClientHandler implements Runnable {
                             }
                         }
                     } else if (input.startsWith("<disconnect")) {
-                        System.out.println(this.username + " отключился.");
+                        System.out.println(this.username + " disconnected.");
                         notifyUsers("offline", this.username);
                         break;
                     }
                 }
             } catch (IOException var16) {
-                System.out.println("Ошибка клиента " + this.username);
+                System.out.println("Error of client " + this.username);
             }
         } finally {
             try {

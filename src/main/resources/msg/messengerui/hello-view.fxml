@@ -6,11 +6,12 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="msg.messengerui.HelloController"
-            stylesheets="@style.css">
+            stylesheets="@style.css"
+            styleClass="root">
 
     <left>
-        <VBox spacing="5" style="-fx-background-color: #ffffff; -fx-padding: 10;">
-            <Label text="Онлайн" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+        <VBox spacing="5" fx:id="leftBar" styleClass="left-panel">
+            <Label text="Online users" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
             <ListView fx:id="userList" prefWidth="150"/>
         </VBox>
     </left>
@@ -21,17 +22,19 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <Label text="Messenger" styleClass="title"/>
-        </HBox>
-    </top>
+            <Label text="Messenger v0.1" styleClass="title"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+    <!--<ToggleButton fx:id="themeToggle" text="Night" styleClass="theme-toggle"/>-->
+</HBox>
+</top>
 
-    <!-- Центр: Чат и уведомления -->
+<!-- Центр: Чат и уведомления -->
     <center>
-        <VBox spacing="5.0">
+        <VBox spacing="5.0" fx:id="center"  styleClass="center-panel">
             <!-- Чат -->
             <ScrollPane fx:id="chatScroll" fitToWidth="true" styleClass="chat-area" VBox.vgrow="ALWAYS">
                 <content>
-                    <VBox fx:id="chatBox" spacing="10.0">
+                    <VBox fx:id="chatBox" spacing="10.0" styleClass="chat-box-content">
                         <padding>
                             <Insets top="10" right="10" bottom="10" left="10"/>
                         </padding>
@@ -40,9 +43,9 @@
             </ScrollPane>
 
             <!-- Уведомления -->
-            <ScrollPane fx:id="notifScroll" fitToWidth="true" maxHeight="60" styleClass="notif-area">
+            <ScrollPane fx:id="notifScroll" fitToWidth="true" maxHeight="60" styleClass="notif-area" >
                 <content>
-                    <VBox fx:id="messageBox" spacing="5.0">
+                    <VBox fx:id="messageBox" spacing="5.0" styleClass="message-box-content">
                         <padding>
                             <Insets top="5" right="5" bottom="5" left="5"/>
                         </padding>
@@ -58,9 +61,9 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <TextField fx:id="toField" promptText="Получатель" />
-            <TextField fx:id="messageField" HBox.hgrow="ALWAYS" promptText="Введите сообщение..."/>
-            <Button fx:id="sendButton" text="Отправить"/>
+            <TextField fx:id="toField" promptText="Receiver" />
+            <TextField fx:id="messageField" HBox.hgrow="ALWAYS" promptText="Enter a message"/>
+            <Button fx:id="sendButton" text="Send"/>
         </HBox>
     </bottom>
 

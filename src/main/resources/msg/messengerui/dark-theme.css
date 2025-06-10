@@ -1,0 +1,124 @@
+.root {
+    -fx-background-color: #1e1e1e;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-text-fill: #e0e0e0;
+}
+
+/* left-panel - для VBox слева */
+.left-panel {
+    -fx-background-color: #2c2c2c; /* Темный фон для левой панели */
+    -fx-padding: 10;
+}
+
+/* center-panel - для VBox в центре */
+.center-panel {
+    -fx-background-color: #252526; /* Темный фон для центральной панели */
+}
+
+/* Верхняя панель */
+.top-bar {
+    -fx-background-color: #2f3640;
+    -fx-padding: 15;
+    -fx-alignment: center-left;
+}
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Список пользователей */
+#userList {
+    -fx-background-color: #1c2833;
+    -fx-border-color: #212f3c;
+}
+#userList .list-cell {
+    -fx-font-size: 14px;
+    -fx-text-fill: #273746;
+    -fx-background-color: #2c2c2c;
+}
+#userList .list-cell:selected {
+    -fx-background-color: #3c3c3c;
+}
+
+/* Область чата */
+.chat-area {
+    -fx-background-color: #252526;
+}
+#chatBox {
+    -fx-background-color: transparent; /* Оставляем прозрачным, чтобы фон ScrollPane был виден */
+}
+.chat-box-content { /* Стиль для VBox внутри ScrollPane */
+    -fx-background-color: transparent; /* Оставляем прозрачным */
+}
+
+/* Уведомления */
+.notif-area {
+    -fx-background-color: #2b2b2b;
+    -fx-border-color: #3c3c3c;
+}
+#messageBox {
+    -fx-background-color: transparent; /* Оставляем прозрачным */
+}
+.message-box-content { /* Стиль для VBox внутри ScrollPane */
+    -fx-background-color: transparent; /* Оставляем прозрачным */
+}
+
+/* Нижняя панель */
+.bottom-bar {
+    -fx-background-color: #2c2c2c;
+    -fx-border-color: #3c3c3c;
+}
+
+/* Кнопка отправки */
+.button {
+    -fx-background-color: #0e7a0d;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+.button:hover {
+    -fx-background-color: #11a611;
+}
+
+/* Поля ввода */
+.text-field {
+    -fx-background-color: #3a3a3a;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-border-color: #555;
+}
+
+/* Сообщения */
+.message-in {
+    -fx-background-color: #2e2e2e;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+}
+.message-out {
+    -fx-background-color: #0e7a0d;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+}
+
+/* Лейблы */
+.sender-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+.time-label {
+    -fx-font-size: 10px;
+    -fx-text-fill: #aaaaaa;
+}
+
+.theme-toggle {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+}
+.theme-toggle:selected {
+    -fx-text-fill: #ffdf00; /* Жёлтая луна */
+}

@@ -2,7 +2,9 @@ package msg.messengerui;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.*;
@@ -30,6 +32,12 @@ public class HelloController {
     @FXML
     private VBox messageBox;
 
+    //@FXML
+    //private ToggleButton themeToggle;
+
+    @FXML
+    private Scene scene;
+
     private Map<String, List<String>> chats = new HashMap<>();
 
     private Socket socket;
@@ -42,8 +50,19 @@ public class HelloController {
     public void initialize() {
         sendButton.setOnAction(event -> sendMessage());
         messageField.setOnAction(event -> sendMessage());
-        messageField.setPromptText("Выберите пользователя");
-        userList.setPlaceholder(new Label("никого онлайн"));
+        messageField.setPromptText("Select an user");
+        userList.setPlaceholder(new Label("No online users"));
+
+//        themeToggle.setOnAction(event -> {
+//            scene.getStylesheets().clear();
+//            if (themeToggle.isSelected()) {
+//                scene.getStylesheets().add(getClass().getResource("dark-theme.css").toExternalForm());
+//                themeToggle.setText("Day");
+//            } else {
+//                scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+//                themeToggle.setText("Night");
+//            }
+//        });
 
         userList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
@@ -51,12 +70,15 @@ public class HelloController {
                 loadChatForUser(newVal);
                 messageField.setDisable(false);
                 sendButton.setDisable(false);
+                messageField.setPromptText("Write a message");
             }
         });
 
         messageField.setDisable(true);
         sendButton.setDisable(true);
         toField.setEditable(false);
+
+
     }
 
     public void setUsername(String username) {
@@ -80,14 +102,14 @@ public class HelloController {
                         handleServerMessage(line);
                     }
                 } catch (IOException e) {
-                    Platform.runLater(() -> addNotification("Соединение потеряно."));
+                    Platform.runLater(() -> addNotification("Connection is lost"));
                 }
             });
             readerThread.setDaemon(true);
             readerThread.start();
 
         } catch (IOException e) {
-            addNotification("Ошибка подключения к серверу.");
+            addNotification("Error with connection to server");
         }
     }
 
@@ -96,17 +118,17 @@ public class HelloController {
         String to = toField.getText().trim();
 
         if (message.isEmpty()) {
-            addNotification("Введите сообщение.");
+            addNotification("Enter a message");
             return;
         }
 
         if (to.isEmpty()) {
-            addNotification("Сначала выберите получателя из списка.");
+            addNotification("First, select the user from the list.");
             return;
         }
 
-        addChatMessage("Вы → " + to, message, true);
-        chats.computeIfAbsent(to, k -> new ArrayList<>()).add("Вы: " + message);
+        addChatMessage("You → " + to, message, true);
+        chats.computeIfAbsent(to, k -> new ArrayList<>()).add("You: " + message);
         messageField.clear();
 
         out.println(XMLBuilder.buildMessage(username, to, message));
@@ -125,14 +147,16 @@ public class HelloController {
 
         } else if (msg.startsWith("<error")) {
             String to = msg.replaceAll(".*to=\"(.*?)\".*", "$1");
-            Platform.runLater(() -> addNotification("Ошибка: не найден пользователь " + to));
+            Platform.runLater(() -> addNotification("Error: the user is not found " + to));
 
         } else if (msg.startsWith("<status")) {
             String user = msg.replaceAll(".*user=\"(.*?)\".*", "$1");
             String status = msg.replaceAll(".*status=\"(.*?)\".*", "$1");
 
+            if (status.equals("<status type=\"auth_success\"/>")) return;
+
             Platform.runLater(() -> {
-                addNotification("Пользователь " + user + " теперь " + status);
+                addNotification("User " + user + " is " + status);
                 if (status.equals("online")) {
                     if (!userList.getItems().contains(user)) {
                         userList.getItems().add(user);
@@ -154,16 +178,43 @@ public class HelloController {
                 socket.close();
             }
         } catch (IOException e) {
-            System.out.println("Ошибка при закрытии соединения.");
+            System.out.println("Error with closing the connection");
         }
     }
 
     public void addChatMessage(String sender, String message, boolean isOutgoing) {
-        Label label = new Label((isOutgoing ? "Вы: " : sender + ": ") + message);
-        label.setStyle("-fx-background-color: " + (isOutgoing ? "#D1F0FF" : "#E8E8E8") + "; -fx-padding: 5; -fx-background-radius: 8;");
-        chatBox.getChildren().add(label);
+        String time = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
+
+        Label senderLabel = new Label(isOutgoing ? "You" : sender);
+        senderLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #333333;");
+
+        Label messageLabel = new Label(message);
+        messageLabel.setStyle("-fx-text-fill: #000000;");
+        messageLabel.setWrapText(true);
+
+        Label timeLabel = new Label(time);
+        timeLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: gray;");
+
+        VBox messageBox = new VBox(senderLabel, messageLabel, timeLabel);
+        messageBox.setSpacing(2);
+        messageBox.setStyle("-fx-background-color: " + (isOutgoing ? "#D1F0FF" : "#E8E8E8") +
+                "; -fx-padding: 8; -fx-background-radius: 8; -fx-max-width: 300; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0.0, 0, 1);");
+        messageBox.setMaxWidth(300);
+
+        HBox container = new HBox(messageBox);
+        container.setMaxWidth(Double.MAX_VALUE);
+        container.setStyle("-fx-padding: 5;");
+
+        if (isOutgoing) {
+            container.setStyle("-fx-alignment: CENTER_RIGHT; -fx-padding: 5;");
+        } else {
+            container.setStyle("-fx-alignment: CENTER_LEFT; -fx-padding: 5;");
+        }
+
+        chatBox.getChildren().add(container);
         scrollToBottom();
     }
+
 
     public void addNotification(String text) {
         Label label = new Label(text);
@@ -173,12 +224,12 @@ public class HelloController {
     }
 
     private void loadChatForUser(String user) {
-        chatBox.getChildren().clear(); // Очистить старый чат
+        chatBox.getChildren().clear();
 
         List<String> messages = chats.getOrDefault(user, new ArrayList<>());
         for (String message : messages) {
             Label label = new Label(message);
-            label.setStyle("-fx-background-color: " + (message.startsWith("Вы: ") ? "#D1F0FF" : "#E8E8E8") + "; -fx-padding: 5; -fx-background-radius: 8;");
+            label.setStyle("-fx-background-color: " + (message.startsWith("You: ") ? "#D1F0FF" : "#E8E8E8") + "; -fx-padding: 5; -fx-background-radius: 8;");
             chatBox.getChildren().add(label);
         }
     }
@@ -192,4 +243,7 @@ public class HelloController {
     }
 
 
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
 }

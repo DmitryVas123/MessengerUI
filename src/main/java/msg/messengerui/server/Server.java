@@ -15,11 +15,11 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(12345);
-        System.out.println("Сервер запущен на порту 12345");
+        System.out.println("Server is launched at the port 12345");
 
         while(true) {
             Socket socket = serverSocket.accept();
-            System.out.println("Новое подключение: " + String.valueOf(socket.getInetAddress()));
+            System.out.println("New connection: " + String.valueOf(socket.getInetAddress()));
             ClientHandler handler = new ClientHandler(socket, clients);
             clients.add(handler);
             (new Thread(handler)).start();
