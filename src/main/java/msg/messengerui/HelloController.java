@@ -235,9 +235,16 @@ public class HelloController {
 
         List<String> messages = chats.getOrDefault(user, new ArrayList<>());
         for (String message : messages) {
-            Label label = new Label(message);
-            label.setStyle("-fx-background-color: " + (message.startsWith("You: ") ? "#D1F0FF" : "#E8E8E8") + "; -fx-padding: 5; -fx-background-radius: 8;");
-            chatBox.getChildren().add(label);
+            if (message.startsWith("You: ")) {
+                addChatMessage("You", message.substring(5), true);
+            } else {
+                int colonIndex = message.indexOf(": ");
+                if (colonIndex > 0) {
+                    String sender = message.substring(0, colonIndex);
+                    String text = message.substring(colonIndex + 2);
+                    addChatMessage(sender, text, false);
+                }
+            }
         }
     }
 
