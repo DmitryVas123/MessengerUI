@@ -30,6 +30,12 @@ public class HelloController {
     private ListView<String> userList;
 
     @FXML
+    private ScrollPane chatScroll;
+
+    @FXML
+    private ScrollPane notifScroll;
+
+    @FXML
     private VBox messageBox;
 
     //@FXML
@@ -153,8 +159,9 @@ public class HelloController {
             String user = msg.replaceAll(".*user=\"(.*?)\".*", "$1");
             String status = msg.replaceAll(".*status=\"(.*?)\".*", "$1");
 
-            if (status.equals("<status type=\"auth_success\"/>")) return;
-
+            if (msg.equals("<status type=\"auth_success\" />")) {
+                return;
+            }
             Platform.runLater(() -> {
                 addNotification("User " + user + " is " + status);
                 if (status.equals("online")) {
@@ -212,7 +219,7 @@ public class HelloController {
         }
 
         chatBox.getChildren().add(container);
-        scrollToBottom();
+        scrollChatToBottom();
     }
 
 
@@ -220,7 +227,7 @@ public class HelloController {
         Label label = new Label(text);
         label.setStyle("-fx-text-fill: gray; -fx-font-style: italic; -fx-padding: 3;");
         messageBox.getChildren().add(label);
-        scrollToBottom();
+        scrollNotificationsToBottom();
     }
 
     private void loadChatForUser(String user) {
@@ -234,11 +241,21 @@ public class HelloController {
         }
     }
 
-    private void scrollToBottom() {
+    private void scrollChatToBottom() {
         Platform.runLater(() -> {
             chatBox.layout();
-            chatBox.setTranslateY(0);
-            chatBox.requestLayout();
+            if (chatScroll != null) {
+                chatScroll.setVvalue(1.0);
+            }
+        });
+    }
+
+    private void scrollNotificationsToBottom() {
+        Platform.runLater(() -> {
+            messageBox.layout();
+            if (notifScroll != null) {
+                notifScroll.setVvalue(1.0);
+            }
         });
     }
 
